@@ -1,0 +1,14 @@
+<div class="row"  >
+
+<%= form_for(:convert, url: convert_path) do |uf| %>
+  
+ 
+  <div class="col-md-3">
+    <%= uf.file_field :file %>
+    <%= uf.submit "Import Organizations", class: "btn btn-primary btn-sm" %>
+  </div>
+   <div class="col-md-3">
+  <%= link_to 'Download blank organization file', "/blankorgupload.csv", class:"btn btn-sm btn-primary movebutton", download: "organizations" %>
+ </div>
+<% end %>
+</div>
