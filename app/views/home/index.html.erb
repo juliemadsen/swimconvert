@@ -1,14 +1,72 @@
 <div class="row"  >
 
+<h1> Meet Manager Virtal Meet Tool </h1>
+
+
+Upload your hy3 files from either Meet Manager or Swimtopia. 
+<br><br>
+These will be merged into a single hy3 that can be imported into an empty Meet Manager meet using Import/Merge Results.
+<br><br>
+SCY will be converted to SCM
+<br><br>
+
 <%= form_for(:convert, url: convert_path) do |uf| %>
   
  
   <div class="col-md-3">
-    <%= uf.file_field :file %>
-    <%= uf.submit "Import Organizations", class: "btn btn-primary btn-sm" %>
+  	<div>
+    Meet Name: <%= uf.text_field :meet_name%>    Meet Date: <%= uf.date_field :meet_date, :value => Time.now.strftime('%Y-%m-%d') %><br>
+    </div>
+
+    <br>
+  	<div>
+    Team 1: <%= uf.file_field :file %>
+    </div>
+    
+     <br>
+    <div>
+	Team 2:<%= uf.file_field :file2 %>
+	<div>
+
+ <br>
+ 	<div>
+	Team 3:<%= uf.file_field :file3 %>
+	<div>
+
+ <br>
+	<div>
+	Team 4:<%= uf.file_field :file4%>
+	<div>
+
+ <br>
+	<div>
+	Team 5:<%= uf.file_field :file5 %>
+	<div>
+ <br>
+
+	<div>
+	Team 6:<%= uf.file_field :file6 %>
+	<div>
+ <br>
+
+	<div>
+	Team 7:<%= uf.file_field :file7 %>
+	<div>
+
+ <br>
+	<div>
+	Team 8:<%= uf.file_field :file8 %>
+	<div>
+
+ <br>
+	<div>
+	Team 9:<%= uf.file_field :file9 %>
+	<div>	
+
+<div>
+
+	 <br>
+    <%= uf.submit "Merge Results", class: "btn btn-primary btn-sm" %>
   </div>
-   <div class="col-md-3">
-  <%= link_to 'Download blank organization file', "/blankorgupload.csv", class:"btn btn-sm btn-primary movebutton", download: "organizations" %>
- </div>
 <% end %>
 </div>
