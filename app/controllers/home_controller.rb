@@ -68,43 +68,42 @@ class HomeController < ApplicationController
 	def append_to_results_hash( fileName, eventResults)
 
 		eventResultStr = "";
-		lastEvent = "";
-		preEventNumLines = "";
+		eventNum = 0;
+		athleteLines = "";
+		teamLine  = ""
 		File.open(fileName, "r").each_line do |line|
-	        Rails.logger.info "Incoming: " + line
-	        if (!line.start_with?("A") && !line.start_with?("B")) 
+	      #  Rails.logger.info "Incoming: " + line
+	        if (!line.start_with?("A") && !line.start_with?("B") && !line.start_with?("C2") && !line.start_with?("C3")) 
 
 	        	#these lines appear before the event number so we will save them once we figure out which event we are on
-	        	if (line.start_with?("C") || line.start_with?("D")) 
-	        		preEventNumLines = preEventNumLines + line
+	        	if (line.start_with?("C1") )
+	        		teamLine = line
+	        	elsif (line.start_with?("D1")) 
+	        		athleteLines = line	
+	        	elsif (line.start_with?("D")) 
+	        		athleteLines = athleteLines + line		
 	        	else 
 
-		        	if (line.start_with?("E1"))
+		        	if (line.start_with?("E1") || line.start_with?("F1"))
+		        		if line.start_with?("F1")
+		        			athleteLines = ""
+		        		end
 		        		afterSwimmer = line[18..]
 			        	columns = afterSwimmer.gsub(/\s+/m, ' ').gsub(/^\s+|\s+$/m, '').split(" ")
-
-			        	if (columns.size >  6)
+			        	Rails.logger.info("column size: #{columns.size} #{columns}" )
+			        	#if (columns.size >  12)
 			        		eventNum = columns[5]
-			        		if eventNum != lastEvent 
-			        			if !eventResultStr.empty? && ! lastEvent.empty? 
-			        				eventResults[lastEvent] = (eventResults[lastEvent] == nil ?  "" : eventResults[lastEvent] ) + eventResultStr
-			        				Rails.logger.info "Saved: " + eventResults[lastEvent] + " for event " + lastEvent
-
-			        				
-			     	  			end
-			        			eventResultStr = preEventNumLines;
-			        			lastEvent = eventNum
-			        		else 
-			        			eventResultStr = eventResultStr + preEventNumLines
-
-			        		end
-			        		Rails.logger.info "Adding: " + line
-			        		eventResultStr = eventResultStr + line
+			        	if eventNum.to_s != eventNum.to_i.to_s
+			        		eventNum = columns[4]
 			        	end
-			        	preEventNumLines = ""  
+			        	#else  
+			        	#	eventNum = columns[4]
+			        	#end
+
+						eventResultStr = teamLine + athleteLines + line			        		
 			        end
 
-			        if (line.start_with?("E2"))
+			        if (line.start_with?("E2") || line.start_with?("F2"))
 
 			        	columns = line.gsub(/\s+/m, ' ').gsub(/^\s+|\s+$/m, '').split(" ")
 			        	if (columns.size > 4)
@@ -122,18 +121,29 @@ class HomeController < ApplicationController
 			        		end
 
 			        	end
-			        	Rails.logger.info "Adding: " + line
+			        	
 			        	eventResultStr = eventResultStr + line
+			        	if (line.start_with?("E2"))
+			        		Rails.logger.info "Adding  for event " + eventNum + ": " + eventResultStr
+			        		eventResults[eventNum] = (eventResults[eventNum] == nil ?  "" : eventResults[eventNum] ) + eventResultStr
+			        		eventResultStr = ""
+
+			        	end
 			        end
+
+			        if (line.start_with?("F3"))
+			        	eventResultStr = eventResultStr + line
+			        		Rails.logger.info "Adding  for event " + eventNum + ": " + eventResultStr
+			         		eventResults[eventNum] = (eventResults[eventNum] == nil ?  "" : eventResults[eventNum] ) + eventResultStr
+			        		eventResultStr = ""
+			         end
 
 			        
 			     end
 		     end
 
 	     end
-	     eventResults[lastEvent] = (eventResults[lastEvent] == nil ?  "" : eventResults[lastEvent] ) + eventResultStr
-	     Rails.logger.info "Saved: " + eventResults[lastEvent] + " for event " + lastEvent
-
+	    
 	     return eventResults
 	end 
 
