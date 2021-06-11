@@ -58,7 +58,6 @@ class HomeController < ApplicationController
 	  	
 	   	output += to_hy3(eventResults)
 	    
-	    debugger
 		send_data output,
     	:type => 'text/text; charset=UTF-8;',
     	:disposition => "attachment; filename=Merge Meet Results-#{meetName}-#{meetDate}-001.hy3"
